@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Post; 
 
 class PostController extends Controller
 {
@@ -13,7 +14,10 @@ class PostController extends Controller
      */
     public function index()
     {
-        //
+        $posts = Post::all();
+
+        // 記事の一覧を表示
+        return view('posts.index', compact('posts'));
     }
 
     /**
@@ -23,7 +27,7 @@ class PostController extends Controller
      */
     public function create()
     {
-        //
+        return view('posts.create');
     }
 
     /**
@@ -32,9 +36,25 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function store(Request $request)
     {
-        //
+        $post = Post::create([
+            'title' => $request->title,
+            'date' => $request->date,
+            'image' => $request->image,
+            'introduction' => $request->introduction,
+            'price' => $request->price,
+            'condition' => $request->condition,
+            
+        ]); // ここを追加
+    
+        return redirect()->route('posts.index'); 
     }
 
     /**
@@ -43,9 +63,12 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Int $id)
     {
-        //
+        $post = Post::find($id);
+
+    // 記事詳細画面を表示
+    return view('posts.show', compact('post'));
     }
 
     /**
@@ -54,9 +77,12 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Int $id)
     {
-        //
+        $post = Post::find($id); // ここを追記
+
+        // 記事編集画面を表示
+        return view('posts.edit', compact('post')); 
     }
 
     /**
@@ -66,9 +92,15 @@ class PostController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request,Int $id)
     {
-        //
+        $post = Post::find($id);
+
+    // 編集処理実行
+        $post->fill($request->all())->save();
+
+    // 記事一覧画面へ
+        return redirect()->route('posts.index');
     }
 
     /**
