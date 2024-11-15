@@ -21,6 +21,9 @@
                                     <button type="button" class="btn btn-primary ml-3" onClick="location.href='{{ route('posts.edit', $post->id) }}'">
                                      編集
                                     </button>
+                                    <button type="button" class="btn btn-primary ml-3" onClick="location.href='{{ route('buy.store', ['id' => $post->id]) }}'">
+                                     購入する
+                                    </button>
                                 </tr>
                             </thead>
                             <tbody>

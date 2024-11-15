@@ -66,6 +66,9 @@
                                     <a class="dropdown-item" href="{{ route('posts.index') }}">
                                     投稿一覧
                                     </a>
+                                    <a class="dropdown-item" href="{{ route('mypages.index') }}">
+                                    マイページ
+                                    </a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>

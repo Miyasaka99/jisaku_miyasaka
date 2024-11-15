@@ -1,4 +1,5 @@
 <?php
+use App\Http\Controllers\BuyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,8 +17,17 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-
+Route::group(['middleware' => 'auth'],function(){
 Route::get('/home', 'HomeController@index')->name('home');
-Route::resource('posts', 'PostController')->except('index');
 
+// post関連
+Route::resource('posts', 'PostController')->except('index');
 Route::get('/', 'PostController@index')->name('posts.index');
+
+// mypage関連
+Route::resource('mypages', 'MypageController')->except('index');
+Route::get('/mypage', 'MypageController@index')->name('mypages.index');
+});
+
+// buy関連
+Route::get('/buy/{id}',[BuyController::class,'buystore'])->name('buy.store');

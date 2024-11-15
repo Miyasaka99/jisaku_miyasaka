@@ -14,7 +14,7 @@ class PostController extends Controller
      */
     public function index()
     {
-        $posts = Post::all();
+        $posts = Post::where('buy_flg','1')->get();
 
         // 記事の一覧を表示
         return view('posts.index', compact('posts'));
@@ -66,6 +66,7 @@ class PostController extends Controller
     public function show(Int $id)
     {
         $post = Post::find($id);
+        
 
     // 記事詳細画面を表示
     return view('posts.show', compact('post'));
