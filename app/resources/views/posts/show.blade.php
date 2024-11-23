@@ -30,13 +30,15 @@
                                 @if(isset($post))
                                 <tr>
                                         <td>{{ $post->title }}</td>
-                                        <td>{{ $post->image }}</td>
+                                        <td><img src="{{ asset($post->image) }}"width="100" height="100"></td>
                                         <td>{{ $post->date }}</td>
                                         <td>{{ $post->introduction }}</td>
                                         <td>{{ $post->price }}</td>
                                         <td>{{ $post->condition }}</td>
                                 </tr>
                                 @endif
+
+                                    
                             </tbody>
                         </table>
                         @if(isset($post))

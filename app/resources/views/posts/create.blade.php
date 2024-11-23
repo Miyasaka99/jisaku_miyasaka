@@ -7,7 +7,7 @@
             <div class="card">
                 <div class="card-header">新規投稿</div>
                 <div class="card-body">
-                    <form action="{{ route('posts.store') }}" method="POST">
+                    <form action="{{ route('posts.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group row">
                             <label for="title" class="col-md-2 col-form-label text-md-right">タイトル</label>
@@ -15,9 +15,11 @@
                                 <input id="title" type="text" class="form-control" name="title" value="{{ old('title') }}">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="exampleFormControlFile1">商品画像</label>
-                            <input type="file" class="form-control-file" name="image" value="{{ old('image') }}">
+                        <div class="form-group row">
+                            <label for="date" class="col-md-2 col-form-label text-md-right">商品画像</label>
+                            <div class="col-md-9">
+                                <input type="file" class="form-control-file" name="image" value="{{ old('image') }}">
+                            </div>
                         </div>
                         <div class="form-group row">
                             <label for="date" class="col-md-2 col-form-label text-md-right">投稿日時</label>

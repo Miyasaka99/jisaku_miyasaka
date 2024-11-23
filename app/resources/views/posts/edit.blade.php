@@ -8,7 +8,7 @@
             <div class="card">
                 <div class="card-header">投稿編集</div>
                 <div class="card-body">
-                    <form action="{{ route('posts.update', $post->id) }}" method="post">
+                    <form action="{{ route('posts.update', $post->id) }}" method="post" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <!-- タイトル -->
@@ -22,7 +22,7 @@
                         <div class="form-group row">
                             <label for="title" class="col-md-2 col-form-label text-md-right">商品画像</label>
                             <div class="col-md-9">
-                                <input id="image" type="text" class="form-control" name="image" value="{{ old('image', $post->image) }}">
+                                <input type="file" name="image" class="form-control" value="{{ old('image', $post->image) }}">
                             </div>
                         </div>
                         <!--投稿日時  -->

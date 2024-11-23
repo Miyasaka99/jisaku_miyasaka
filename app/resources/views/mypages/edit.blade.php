@@ -8,10 +8,10 @@
             <div class="card">
                 <div class="card-header">マイページ編集</div>
                 <div class="card-body">
-                    <form action="{{ route('mypages.update', $mypage->id) }}" method="post">
+                    <form action="{{ route('mypages.update', $mypage->id) }}" method="post" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
-                        <!-- タイトル -->
+                        <!-- ユーザー名 -->
                         <div class="form-group row">
                             <label for="title" class="col-md-2 col-form-label text-md-right">ユーザー名</label>
                             <div class="col-md-9">
@@ -22,7 +22,7 @@
                         <div class="form-group row">
                             <label for="title" class="col-md-2 col-form-label text-md-right">アイコン画像</label>
                             <div class="col-md-9">
-                                <input id="image" type="text" class="form-control" name="image" value="{{ old('image', $mypage->image) }}">
+                                <input type="file" class="form-control" name="image" value="{{ old('image', $mypage->image) }}">
                             </div>
                         </div>
                         <!-- 自己紹介 -->

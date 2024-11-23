@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Post; 
+use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -12,11 +14,17 @@ class PostController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $posts = Post::where('buy_flg','1')->get();
+        // 条件式if:ユーザ権限が管理者の場合、リダイレクト
+        $user = Auth::user(); 
+        if ($user->role === '0') {
+            // 管理者専用のリダイレクトまたは表示
+            return redirect()->route('manager.index');
+        }
 
-        // 記事の一覧を表示
+        $posts = Post::with('user')->where('buy_flg','1')->get();
+
         return view('posts.index', compact('posts'));
     }
 
@@ -44,10 +52,19 @@ class PostController extends Controller
      */
     public function store(Request $request)
     {
+        $user_id = Auth::user()->id;
+
+        // アップロードされたファイル名を取得
+        $file_name = $request->file('image')->getClientOriginalName();
+
+        // 取得したファイル名で保存
+        $request->file('image')->storeAs('public/', $file_name);
+
         $post = Post::create([
             'title' => $request->title,
+            'user_id' => $user_id,
             'date' => $request->date,
-            'image' => $request->image,
+            'image' => 'storage/' . $file_name,
             'introduction' => $request->introduction,
             'price' => $request->price,
             'condition' => $request->condition,
@@ -97,10 +114,18 @@ class PostController extends Controller
     {
         $post = Post::find($id);
 
-    // 編集処理実行
-        $post->fill($request->all())->save();
+        $file_name = $request->file('image')->getClientOriginalName();
+        $request->file('image')->storeAs('public/', $file_name); 
+        
+        $post->title = $request->title;
+        $post->date = $request->date;
+        $post->image = 'storage/'. $file_name;
+        $post->introduction = $request->introduction;
+        $post->price = $request->price;
+        $post->condition = $request->condition;
 
-    // 記事一覧画面へ
+        $post->save();
+
         return redirect()->route('posts.index');
     }
 
@@ -114,4 +139,36 @@ class PostController extends Controller
     {
         //
     }
+    /**
+     * 検索機能
+     * 
+     * @return \Illuminate\Http\Response
+     */
+    public function search(Request $request)
+    {
+
+        $posts = new Post;
+
+        $keyword = $request->input('keyword');
+
+        // 未購入の投稿を表示
+
+        if(!empty($keyword)) {//$keyword　が空ではない場合、検索処理を実行します
+            $posts = $posts->where('buy_flg', '1')
+               ->where(function ($query) use ($keyword) {
+                   $query->where('title', 'LIKE', "%{$keyword}%")
+                         ->orWhere('introduction', 'LIKE', "%{$keyword}%");
+               });
+
+        }else{
+            $posts = $posts->where('buy_flg','1');
+        }
+
+        $posts = $posts->get();
+
+        // 記事の一覧を表示
+        return view('posts.index', compact('posts'));
+    }
+    
+
 }

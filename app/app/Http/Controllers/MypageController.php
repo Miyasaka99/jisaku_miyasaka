@@ -16,10 +16,11 @@ class MypageController extends Controller
     {
         $user = Auth::user();
         $posts = Auth::user()->post()->get();
-        // dd($post);
+        $buies = Auth::user()->buy()->with('post')->get();
+        // dd($buies);
         // 記事の一覧を表示
-        return view('mypages.index', compact('user','posts'));
-    }
+        return view('mypages.index', compact('user','posts','buies'));
+    }  
 
     /**
      * Show the form for creating a new resource.
@@ -78,8 +79,18 @@ class MypageController extends Controller
     {
         $mypage = Auth::user(); 
 
-        // 編集処理実行
-            $mypage->fill($request->all())->save();
+        $file_name = $request->file('image')->getClientOriginalName();
+
+        $request->file('image')->storeAs('public/', $file_name);        
+
+        
+        // フォームから受け取った値を保存
+        $mypage->name = $request->name;
+        $mypage->image = 'storage/' . $file_name;
+        $mypage->profile = $request->profile;
+        $mypage->save();
+
+        
     
         // マイぺージ画面へ
             return redirect()->route('mypages.index');
